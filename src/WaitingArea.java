@@ -48,5 +48,9 @@ public class WaitingArea {
         }
     }
 
+    public int getQueueLength() {
+        return this.customerQueue.size();
+    }
+
     // Add more methods as you see fit
 }
