@@ -5,8 +5,8 @@ import java.util.LinkedList;
  */
 public class WaitingArea {
 
-    int size;
-    LinkedList<Customer> queue;
+    private int capacity;
+    private LinkedList<Customer> customerQueue;
 
     /**
      * Creates a new waiting area.
@@ -16,8 +16,8 @@ public class WaitingArea {
      */
     public WaitingArea(int size) {
         // TODO Implement required functionality
-        this.size = size;
-        this.queue = new LinkedList<>();
+        this.capacity = size;
+        this.customerQueue = new LinkedList<>();
     }
 
     /**
@@ -27,10 +27,11 @@ public class WaitingArea {
      */
     public synchronized void enter(Customer customer) {
         // TODO Implement required functionality
-        if (this.queue.size() < size){
-            this.queue.add(customer);
+        if (this.customerQueue.size() < capacity){
+            this.customerQueue.add(customer);
         } else {
             System.out.println("A customer tried to enter a full waiting area.");
+            throw new IllegalStateException("Waiting area full.");
         }
     }
 
@@ -39,8 +40,8 @@ public class WaitingArea {
      */
     public synchronized Customer next() {
         // TODO Implement required functionality
-        if (!this.queue.isEmpty()) {
-            return this.queue.pop();
+        if (!this.customerQueue.isEmpty()) {
+            return this.customerQueue.pop();
         } else {
             System.out.println("No more customers in waiting area.");
             return null; //Might find a way to not have to return null #cleancode
