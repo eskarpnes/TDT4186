@@ -21,7 +21,7 @@ public class SushiBar {
     private static String path = "./";
 
     //Variables related to statistics
-    public static SynchronizedInteger customerCounter;
+    public static SynchronizedInteger customerCounter = new SynchronizedInteger(0); //Must be initiated for testing.
     public static SynchronizedInteger servedOrders;
     public static SynchronizedInteger takeawayOrders;
     public static SynchronizedInteger totalOrders;
