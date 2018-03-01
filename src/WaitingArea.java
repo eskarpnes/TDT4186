@@ -5,6 +5,9 @@ import java.util.LinkedList;
  */
 public class WaitingArea {
 
+    int size;
+    LinkedList<Customer> queue;
+
     /**
      * Creates a new waiting area.
      * areaSize decides how many people can be waiting at the same time (how large the shared buffer is)
@@ -13,6 +16,8 @@ public class WaitingArea {
      */
     public WaitingArea(int size) {
         // TODO Implement required functionality
+        this.size = size;
+        this.queue = new LinkedList<>();
     }
 
     /**
@@ -22,6 +27,11 @@ public class WaitingArea {
      */
     public synchronized void enter(Customer customer) {
         // TODO Implement required functionality
+        if (this.queue.size() < size){
+            this.queue.add(customer);
+        } else {
+            System.out.println("A customer tried to enter a full waiting area.");
+        }
     }
 
     /**
@@ -29,6 +39,12 @@ public class WaitingArea {
      */
     public synchronized Customer next() {
         // TODO Implement required functionality
+        if (!this.queue.isEmpty()) {
+            return this.queue.pop();
+        } else {
+            System.out.println("No more customers in waiting area.");
+            return null; //Might find a way to not have to return null #cleancode
+        }
     }
 
     // Add more methods as you see fit
