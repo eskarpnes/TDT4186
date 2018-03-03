@@ -29,6 +29,7 @@ public class WaitingArea {
         // TODO Implement required functionality
         if (this.customerQueue.size() < capacity){
             this.customerQueue.add(customer);
+            SushiBar.write("Customer #" + Integer.toString(customer.getCustomerID()) + " is now waiting.");
         } else {
             System.out.println("A customer tried to enter a full waiting area.");
             throw new IllegalStateException("Waiting area full.");
@@ -41,15 +42,19 @@ public class WaitingArea {
     public synchronized Customer next() {
         // TODO Implement required functionality
         if (!this.customerQueue.isEmpty()) {
-            return this.customerQueue.pop();
+            return this.customerQueue.removeFirst();
         } else {
             System.out.println("No more customers in waiting area.");
-            return null; //Might find a way to not have to return null #cleancode
+            return null;
         }
     }
 
-    public int getQueueLength() {
+    protected int getQueueLength() {
         return this.customerQueue.size();
+    }
+
+    protected boolean isQueueEmpty() {
+        return this.customerQueue.isEmpty();
     }
 
     // Add more methods as you see fit
