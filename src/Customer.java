@@ -29,8 +29,10 @@ public class Customer {
         SushiBar.servedOrders.add(orders);
         SushiBar.takeawayOrders.add(takeout);
         SushiBar.totalOrders.add(orders + takeout);
+        SushiBar.write("Customer #" + Integer.toString(this.id) + " is now eating.");
         try {
             Thread.sleep(SushiBar.customerWait);
+            SushiBar.write("Customer #" + Integer.toString(this.id) + " is now leaving.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -45,8 +47,7 @@ public class Customer {
     }
 
     private int randomIntInRange(int min, int max) {
-        int randomNum = random.nextInt((max-min) + 1) + min;
-        return randomNum;
+        return random.nextInt((max-min) + 1) + min;
     }
 
     // Add more methods as you see fit
