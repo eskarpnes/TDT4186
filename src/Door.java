@@ -7,6 +7,7 @@ import java.util.Timer;
 public class Door implements Runnable {
 
     private final WaitingArea waitingArea;
+    private final int frequency;
 
     /**
      * Creates a new Door. Make sure to save the
@@ -15,6 +16,7 @@ public class Door implements Runnable {
     public Door(WaitingArea waitingArea) {
         // TODO Implement required functionality
         this.waitingArea = waitingArea;
+        this.frequency = SushiBar.doorWait;
     }
 
     /**
@@ -24,11 +26,10 @@ public class Door implements Runnable {
     @Override
     public void run() {
         // TODO Implement required functionality
-        int frequency = SushiBar.doorWait;
         while(SushiBar.isOpen) {
             spawnCustomer();
             try {
-                Thread.sleep(frequency);
+                Thread.sleep(this.frequency);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -43,6 +44,5 @@ public class Door implements Runnable {
             System.out.println("No more room in the waiting area.");
         }
     }
-
     // Add more methods as you see fit
 }
