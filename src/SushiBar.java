@@ -2,6 +2,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class SushiBar {
@@ -11,8 +12,8 @@ public class SushiBar {
     private static int waitressCount = 10;
     private static int duration = 3;
     public static int maxOrder = 10;
-    public static int waitressWait = 50; // Used to calculat the time the waitress spends before taking the order
-    public static int customerWait = 3000; // Used to calculate the time the customer uses eating
+    public static int waitressWait = 50; // Used to calculate the time the waitress spends before taking the order
+    public static int customerWait = 150; // Used to calculate the time the customer uses eating
     public static int doorWait = 100; // Used to calculate the interval at which the door tries to create a customer
     public static boolean isOpen = true;
 
@@ -37,6 +38,19 @@ public class SushiBar {
         takeawayOrders = new SynchronizedInteger(0);
 
         // TODO initialize the bar and start the different threads
+        ArrayList<Thread> threads = new ArrayList<>();
+        SushiBar sushiBar = new SushiBar();
+        WaitingArea waitingArea = new WaitingArea(sushiBar.waitingAreaCapacity);
+        Door door = new Door(waitingArea);
+        threads.add(new Thread(door));
+        for (int i = 0; i < sushiBar.waitressCount; i++) {
+            Waitress waitress = new Waitress(waitingArea);
+            threads.add(new Thread(waitress));
+        }
+        Clock clock = new Clock(sushiBar.duration);
+        for (Thread thread : threads) {
+            thread.start();
+        }
     }
 
     //Writes actions in the log file and console
