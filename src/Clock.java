@@ -16,7 +16,7 @@ public class Clock {
     class RemindTask extends TimerTask {
         public void run() {
             SushiBar.isOpen = false; //prevents creating new customers.
-            SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW. *****");
+            endLoggingSequence();
             timer.cancel();
         }
     }
@@ -26,5 +26,13 @@ public class Clock {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SS");
         return sdf.format(cal.getTime());
+    }
+
+    private void endLoggingSequence() {
+        SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW. *****");
+        SushiBar.write("Stats:");
+        SushiBar.write("Total number of orders: " + Integer.toString(SushiBar.totalOrders.get()));
+        SushiBar.write("Total number of takeaways: " + Integer.toString(SushiBar.takeawayOrders.get()));
+        SushiBar.write("Total number of orders eaten at the bar: " + Integer.toString(SushiBar.servedOrders.get()));
     }
 }
