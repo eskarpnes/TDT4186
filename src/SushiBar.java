@@ -14,7 +14,7 @@ public class SushiBar {
     public static int maxOrder = 10;
     public static int waitressWait = 50; // Used to calculate the time the waitress spends before taking the order
     public static int customerWait = 150; // Used to calculate the time the customer uses eating
-    public static int doorWait = 100; // Used to calculate the interval at which the door tries to create a customer
+    public static int doorWait = 10; // Used to calculate the interval at which the door tries to create a customer
     public static boolean isOpen = true;
 
     //Creating log file
@@ -42,10 +42,10 @@ public class SushiBar {
         SushiBar sushiBar = new SushiBar();
         WaitingArea waitingArea = new WaitingArea(sushiBar.waitingAreaCapacity);
         Door door = new Door(waitingArea);
-        threads.add(new Thread(door));
+        threads.add(new Thread(door, "Door"));
         for (int i = 0; i < sushiBar.waitressCount; i++) {
             Waitress waitress = new Waitress(waitingArea);
-            threads.add(new Thread(waitress));
+            threads.add(new Thread(waitress, "waitress" + Integer.toString(i+1)));
         }
         Clock clock = new Clock(sushiBar.duration);
         for (Thread thread : threads) {
@@ -65,5 +65,13 @@ public class SushiBar {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static void endLoggingSequence() {
+        SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW. *****");
+        SushiBar.write("Stats:");
+        SushiBar.write("Total number of orders: " + Integer.toString(SushiBar.totalOrders.get()));
+        SushiBar.write("Total number of takeaways: " + Integer.toString(SushiBar.takeawayOrders.get()));
+        SushiBar.write("Total number of orders eaten at the bar: " + Integer.toString(SushiBar.servedOrders.get()));
     }
 }

@@ -7,6 +7,7 @@ public class WaitingArea {
 
     private int capacity;
     private LinkedList<Customer> customerQueue;
+    private boolean stopServing;
 
     /**
      * Creates a new waiting area.
@@ -15,9 +16,9 @@ public class WaitingArea {
      * @param size The maximum number of Customers that can be waiting.
      */
     public WaitingArea(int size) {
-        // TODO Implement required functionality
         this.capacity = size;
         this.customerQueue = new LinkedList<>();
+        this.stopServing = false;
     }
 
     /**
@@ -26,12 +27,11 @@ public class WaitingArea {
      * @param customer A customer created by Door, trying to enter the waiting area
      */
     public synchronized void enter(Customer customer) {
-        // TODO Implement required functionality
-        if (this.customerQueue.size() < capacity){
+        if (this.customerQueue.size() < capacity) {
             this.customerQueue.add(customer);
-            SushiBar.write("Customer #" + Integer.toString(customer.getCustomerID()) + " is now waiting.");
+            SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(customer.getCustomerID()) + " is now waiting.");
+            notify();
         } else {
-            System.out.println("A customer tried to enter a full waiting area.");
             throw new IllegalStateException("Waiting area full.");
         }
     }
@@ -40,17 +40,28 @@ public class WaitingArea {
      * @return The customer that is first in line.
      */
     public synchronized Customer next() {
-        // TODO Implement required functionality
-        if (!this.customerQueue.isEmpty()) {
-            return this.customerQueue.removeFirst();
-        } else {
-            System.out.println("No more customers in waiting area.");
-            return null;
+        return this.customerQueue.removeFirst();
+    }
+
+    public void close() {
+        while(this.customerQueue.size() > 0) {
+            synchronized (this) {
+                notify();
+            }
+        }
+        SushiBar.endLoggingSequence();
+        this.stopServing = true;
+        synchronized (this) {
+            notifyAll();
         }
     }
 
     protected int getQueueLength() {
         return this.customerQueue.size();
+    }
+
+    protected boolean isStopServing() {
+        return this.stopServing;
     }
 
     protected boolean isQueueEmpty() {

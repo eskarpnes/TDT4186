@@ -14,7 +14,6 @@ public class Door implements Runnable {
      * @param waitingArea   The customer queue waiting for a seat
      */
     public Door(WaitingArea waitingArea) {
-        // TODO Implement required functionality
         this.waitingArea = waitingArea;
         this.frequency = SushiBar.doorWait;
     }
@@ -25,7 +24,6 @@ public class Door implements Runnable {
      */
     @Override
     public void run() {
-        // TODO Implement required functionality
         while(SushiBar.isOpen) {
             spawnCustomer();
             try {
@@ -34,14 +32,15 @@ public class Door implements Runnable {
                 e.printStackTrace();
             }
         }
+        waitingArea.close();
     }
 
-    protected void spawnCustomer() {
+    private void spawnCustomer() {
         Customer customer = new Customer();
         try {
             waitingArea.enter(customer);
         } catch (IllegalStateException e) {
-            System.out.println("No more room in the waiting area.");
+            //Waiting area full
         }
     }
     // Add more methods as you see fit

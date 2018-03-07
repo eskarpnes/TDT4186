@@ -26,13 +26,13 @@ public class Customer {
     public synchronized void order(){
         int orders = randomIntInRange(0, maxOrder);
         int takeout = randomIntInRange(0, orders);
-        SushiBar.servedOrders.add(orders);
+        SushiBar.servedOrders.add(orders-takeout);
         SushiBar.takeawayOrders.add(takeout);
-        SushiBar.totalOrders.add(orders + takeout);
-        SushiBar.write("Customer #" + Integer.toString(this.id) + " is now eating.");
+        SushiBar.totalOrders.add(orders);
+        SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(this.id) + " is now eating.");
         try {
             Thread.sleep(SushiBar.customerWait);
-            SushiBar.write("Customer #" + Integer.toString(this.id) + " is now leaving.");
+            SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(this.id) + " is now leaving.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
