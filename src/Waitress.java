@@ -22,23 +22,28 @@ public class Waitress implements Runnable {
     @Override
     public void run() {
         while (!waitingArea.isStopServing()) {
+            Customer customer;
             synchronized (waitingArea) {
                 try {
                     waitingArea.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                customer = waitingArea.next();
             }
-            if (!waitingArea.isStopServing()) {
-                Customer customer = waitingArea.next();
+            if (!waitingArea.isStopServing() && customer != null) {
                 SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(customer.getCustomerID()) + " is now fetched.");
                 try {
-                    Thread.sleep(SushiBar.waitressWait);
+                    Thread.sleep((int)(SushiBar.waitressWait*Math.random()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 customer.order();
+                waitingArea.checkForMore();
             }
         }
+        System.out.println(Thread.currentThread().getName() + " went home for the day. Goodbye!");
+        SushiBar.waitressClockOutCounter.increment();
+        SushiBar.waitressClockOut();
     }
 }

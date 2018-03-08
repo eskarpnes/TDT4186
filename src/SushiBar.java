@@ -14,7 +14,7 @@ public class SushiBar {
     public static int maxOrder = 10;
     public static int waitressWait = 50; // Used to calculate the time the waitress spends before taking the order
     public static int customerWait = 150; // Used to calculate the time the customer uses eating
-    public static int doorWait = 10; // Used to calculate the interval at which the door tries to create a customer
+    public static int doorWait = 50; // Used to calculate the interval at which the door tries to create a customer
     public static boolean isOpen = true;
 
     //Creating log file
@@ -23,6 +23,7 @@ public class SushiBar {
 
     //Variables related to statistics
     public static SynchronizedInteger customerCounter = new SynchronizedInteger(0); //Must be initiated for testing.
+    public static SynchronizedInteger waitressClockOutCounter;
     public static SynchronizedInteger servedOrders;
     public static SynchronizedInteger takeawayOrders;
     public static SynchronizedInteger totalOrders;
@@ -33,6 +34,7 @@ public class SushiBar {
 
         //Initializing shared variables for counting number of orders
         customerCounter = new SynchronizedInteger(0);
+        waitressClockOutCounter = new SynchronizedInteger(0);
         totalOrders = new SynchronizedInteger(0);
         servedOrders = new SynchronizedInteger(0);
         takeawayOrders = new SynchronizedInteger(0);
@@ -67,8 +69,13 @@ public class SushiBar {
         }
     }
 
+    public static void waitressClockOut() {
+        if (waitressClockOutCounter.get() == waitressCount) {
+            endLoggingSequence();
+        }
+    }
+
     public static void endLoggingSequence() {
-        SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW. *****");
         SushiBar.write("Stats:");
         SushiBar.write("Total number of orders: " + Integer.toString(SushiBar.totalOrders.get()));
         SushiBar.write("Total number of takeaways: " + Integer.toString(SushiBar.takeawayOrders.get()));

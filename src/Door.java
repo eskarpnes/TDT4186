@@ -27,11 +27,12 @@ public class Door implements Runnable {
         while(SushiBar.isOpen) {
             spawnCustomer();
             try {
-                Thread.sleep(this.frequency);
+                Thread.sleep((int)(this.frequency*Math.random()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW. *****");
         waitingArea.close();
     }
 
@@ -40,8 +41,7 @@ public class Door implements Runnable {
         try {
             waitingArea.enter(customer);
         } catch (IllegalStateException e) {
-            //Waiting area full
+            //Waiting area full, ignore customer
         }
     }
-    // Add more methods as you see fit
 }

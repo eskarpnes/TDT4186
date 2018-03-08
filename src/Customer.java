@@ -31,7 +31,7 @@ public class Customer {
         SushiBar.totalOrders.add(orders);
         SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(this.id) + " is now eating.");
         try {
-            Thread.sleep(SushiBar.customerWait);
+            Thread.sleep((int)(SushiBar.customerWait*Math.random()));
             SushiBar.write(Thread.currentThread().getName() + ": Customer #" + Integer.toString(this.id) + " is now leaving.");
         } catch (InterruptedException e) {
             e.printStackTrace();

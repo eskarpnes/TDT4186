@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class WaitingArea {
 
     private int capacity;
-    private LinkedList<Customer> customerQueue;
+    protected final LinkedList<Customer> customerQueue;
     private boolean stopServing;
 
     /**
@@ -40,7 +40,11 @@ public class WaitingArea {
      * @return The customer that is first in line.
      */
     public synchronized Customer next() {
-        return this.customerQueue.removeFirst();
+        Customer customer = null;
+        if (!customerQueue.isEmpty()) {
+            customer = this.customerQueue.removeFirst();
+        }
+        return customer;
     }
 
     public void close() {
@@ -49,24 +53,19 @@ public class WaitingArea {
                 notify();
             }
         }
-        SushiBar.endLoggingSequence();
         this.stopServing = true;
         synchronized (this) {
             notifyAll();
         }
     }
 
-    protected int getQueueLength() {
-        return this.customerQueue.size();
+    public synchronized void checkForMore() {
+        if (!customerQueue.isEmpty()) {
+            notify();
+        }
     }
 
     protected boolean isStopServing() {
         return this.stopServing;
     }
-
-    protected boolean isQueueEmpty() {
-        return this.customerQueue.isEmpty();
-    }
-
-    // Add more methods as you see fit
 }
